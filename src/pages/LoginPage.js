@@ -3,19 +3,19 @@ import LoginForm from "components/LoginForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh",
+    height: "60vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
 }));
 
-export default function AdminLogIn() {
+export default function LoginPage() {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <LoginForm successPath="/admin/dashboard" />
+      <LoginForm successPath="/" />
     </div>
   );
 }

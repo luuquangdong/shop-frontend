@@ -1,22 +1,39 @@
-import AdminPageLayout from "pages/AdminPageLayout"
-import { Route, Switch } from "react-router-dom";
+import AdminAddProductPage from "pages/AdminAddProductPage";
+import AdminOrderAll from "pages/AdminOrderAll";
+import AdminPageLayout from "pages/AdminPageLayout";
+import AdminProductDetailPage from "pages/AdminProductDetailPage";
+import ProductManagerPage from "pages/ProductManagerPage";
+import { Redirect, Route, Switch } from "react-router-dom";
 
 function AdminRoute(props) {
   const { match } = props;
-  console.log(match)
   return (
     <AdminPageLayout>
       <Switch>
-        <Route path={`${match.path}/one`} component={AdminOne}/>
-        <Route path={`${match.path}/two`} component={AdminTwo}/>
-        <Route path={`${match.path}/three`} component={AdminThree}/>
+        <Redirect from="/admin" exact to="/admin/dashboard" />
+        <Route path="/admin/dashboard" component={AdminDashboard} />
+        <Route
+          path={`${match.path}/products/all`}
+          component={ProductManagerPage}
+        />
+        <Route
+          path={`${match.path}/products/add`}
+          component={AdminAddProductPage}
+        />
+        <Route
+          path={`${match.path}/products/:id`}
+          component={AdminProductDetailPage}
+        />
+        <Route path={`${match.path}/orders/all`} component={AdminOrderAll} />
+        <Route path={`${match.path}/three/one`} component={AdminFive} />
+        <Route path={`${match.path}/three/two`} component={AdminSix} />
       </Switch>
     </AdminPageLayout>
-  )
+  );
 }
 
-export default AdminRoute
+export default AdminRoute;
 
-const AdminOne = () => (<div>Admin One</div>)
-const AdminTwo = () => (<div>Admin Two</div>)
-const AdminThree = () => (<div>Admin Three</div>)
+const AdminFive = () => <div>Admin Five</div>;
+const AdminSix = () => <div>Admin Six</div>;
+const AdminDashboard = () => <div>Admin Dashboard</div>;

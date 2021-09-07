@@ -1,26 +1,30 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import exampleReduce from './exampleSlice'
-import authReducer from './authSlice'
-import storage from 'redux-persist/lib/storage'
-import { persistStore, persistReducer } from 'redux-persist'
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import authReducer from "./authSlice";
+import adminCommonReducer from "./adminCommonSlice";
+import cartReducer from "./cartSlice";
+import roleReducer from "./roleSlice";
+import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from "redux-persist";
 
 const rootReducer = combineReducers({
-  example: exampleReduce,
-  auth: authReducer
-})
+  auth: authReducer,
+  adminCommon: adminCommonReducer,
+  cart: cartReducer,
+  role: roleReducer,
+});
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
-  whitelist: ['auth']
-}
+  whitelist: ["auth"],
+};
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: persistedReducer
-})
+  reducer: persistedReducer,
+});
 
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);
 
 export default store;

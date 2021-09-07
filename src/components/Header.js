@@ -1,84 +1,92 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import StoreIcon from '@material-ui/icons/Store';
-import Navbar from './NavBar/Navbar';
-import { Link } from 'react-router-dom';
+import React from "react";
+import PropTypes from "prop-types";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import Navbar from "./Navbar";
+import { Link } from "react-router-dom";
+import { Logo5Icon } from "assets/images";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import {
+  IconButton,
+  Typography,
+  Toolbar,
+  AppBar,
+  Badge,
+} from "@material-ui/core";
+import Search from "./Search";
+import { useSelector } from "react-redux";
+import AccountBtn from "./AccountBtn";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
     title: {
       fontSize: theme.typography.h1,
+      fontWeight: "bold",
       padding: theme.spacing(2),
-      color: 'inherit',
-      display: 'flex',
-      alignItems: 'center',
-      textDecoration: 'none',
-      '&:hover': {
-        textDecoration: 'underline',
-        color: '#d6f5ff'
-      }
+      color: "inherit",
+      display: "flex",
+      alignItems: "center",
+      textDecoration: "none",
+      transition: "background-color 1s ease-out",
+      borderRadius: 16,
+      "&:active": {
+        backgroundColor: theme.palette.primary.light,
+      },
     },
-    titleIcon: {
-      marginRight: theme.spacing(1),
+    logo: {
+      marginRight: "6px",
     },
-    menuButton: {
-      marginRight: theme.spacing(2),
+    cartIcon: {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.common.white,
+      "&:hover": {
+        // backgroundColor: "#eee",
+        // color: theme.palette.primary.dark,
+        backgroundColor: theme.palette.primary.dark,
+      },
     },
-    growPre: {
+    grow: {
       flexGrow: 1,
     },
-    growAfter: {
-      flexGrow: 1,
-    },
-    center: {
-      display: 'flex',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-    },
-    mot: {
-      color: '#111'
-    },
-    hai: {
-      padding: theme.spacing(1)
-    }
-  }),
+  })
 );
 
 function Header(props) {
+  const { brandName, navbarData, handleSearchSubmit, handleCartClick } = props;
+
+  const { items } = useSelector((state) => state.cart);
+  console.log(items);
+
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <Link to='/' className={classes.title}>
-            <StoreIcon className={classes.titleIcon}/>
-            <Typography variant="h5">
-              My Shop
-            </Typography>
-          </Link>
-          <div className={classes.growPre} />
-          <Navbar />
-          <div className={classes.growAfter} />
-
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position="static">
+      <Toolbar>
+        <Link to="/" className={classes.title}>
+          <Logo5Icon fill="white" height={42} myClass={classes.logo} />
+          <Typography variant="h5">{brandName}</Typography>
+        </Link>
+        <div className={classes.grow} />
+        <Navbar data={navbarData} />
+        <div className={classes.grow} />
+        <Search submit={handleSearchSubmit} />
+        <IconButton
+          className={classes.cartIcon}
+          onClick={handleCartClick}
+          aria-label="shopping-cart"
+        >
+          <Badge badgeContent={items?.length} color="error">
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
+        <AccountBtn />
+      </Toolbar>
+    </AppBar>
   );
 }
 
 Header.propTypes = {
+  brandName: PropTypes.string.isRequired,
+  navbarData: PropTypes.array.isRequired,
+};
 
-}
-
-export default Header
-
+export default Header;
