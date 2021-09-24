@@ -7,7 +7,6 @@ import {
   Zoom,
 } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import instanceAxios from "apis/base";
 import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -15,6 +14,7 @@ import { addToCart } from "redux/cartSlice";
 import { number2VNCurrency } from "utils/common";
 import MyGroupBtn from "components/MyGroupBtn";
 import { Alert } from "@material-ui/lab";
+import { fetchProduct } from "apis/productAPI";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -65,8 +65,7 @@ export default function ProductDetailPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    instanceAxios
-      .get(`/products/${id}`)
+    fetchProduct(id)
       .then((resp) => {
         console.log(resp);
         setProduct(resp.data);
@@ -138,72 +137,74 @@ export default function ProductDetailPage() {
             </Grid>
             <Grid item md={7} sm={6} sx={12}>
               <table className={classes.table}>
-                <tr>
-                  <td className={classes.title}>TÊN SẢN PHẨM</td>
-                  <td className={classes.title}>{product?.name}</td>
-                </tr>
-                <tr>
-                  <td className={classes.price}>GIÁ</td>
-                  <td className={classes.price}>
-                    {/* {number2VNCurrency(product?.price)} */}
-                    {product.rate !== undefined ? (
-                      <>
-                        <del>{number2VNCurrency(product.price)}</del>&nbsp;
-                        {number2VNCurrency(
-                          Math.round(product.price * (1 - product.rate))
-                        )}
-                      </>
-                    ) : (
-                      number2VNCurrency(product.price)
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <td>MÔ TẢ</td>
-                  <td>{product?.shortDescription}</td>
-                </tr>
-                <tr>
-                  <td>THƯƠNG HIỆU</td>
-                  <td>{product?.brand}</td>
-                </tr>
-                <tr>
-                  <td>MÀU</td>
-                  <td>
-                    <MyGroupBtn
-                      values={colors}
-                      currentValue={color}
-                      setValue={setColor}
-                      refValues={refSize}
-                      currentRefValue={size}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>SIZE</td>
-                  <td>
-                    <MyGroupBtn
-                      values={sizes}
-                      currentValue={size}
-                      setValue={setSize}
-                      refValues={refColor}
-                      currentRefValue={color}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>SỐ LƯỢNG</td>
-                  <td>
-                    <input
-                      size={1}
-                      value={amount}
-                      onChange={handleValueChange}
-                    />
-                    &nbsp; hiện có: &nbsp;
-                    {size && color
-                      ? getQuantity(product.items, color, size)
-                      : product.totalQuantity}
-                  </td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td className={classes.title}>TÊN SẢN PHẨM</td>
+                    <td className={classes.title}>{product?.name}</td>
+                  </tr>
+                  <tr>
+                    <td className={classes.price}>GIÁ</td>
+                    <td className={classes.price}>
+                      {/* {number2VNCurrency(product?.price)} */}
+                      {product.rate !== undefined ? (
+                        <>
+                          <del>{number2VNCurrency(product.price)}</del>&nbsp;
+                          {number2VNCurrency(
+                            Math.round(product.price * (1 - product.rate))
+                          )}
+                        </>
+                      ) : (
+                        number2VNCurrency(product.price)
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>MÔ TẢ</td>
+                    <td>{product?.shortDescription}</td>
+                  </tr>
+                  <tr>
+                    <td>THƯƠNG HIỆU</td>
+                    <td>{product?.brand}</td>
+                  </tr>
+                  <tr>
+                    <td>MÀU</td>
+                    <td>
+                      <MyGroupBtn
+                        values={colors}
+                        currentValue={color}
+                        setValue={setColor}
+                        refValues={refSize}
+                        currentRefValue={size}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>SIZE</td>
+                    <td>
+                      <MyGroupBtn
+                        values={sizes}
+                        currentValue={size}
+                        setValue={setSize}
+                        refValues={refColor}
+                        currentRefValue={color}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>SỐ LƯỢNG</td>
+                    <td>
+                      <input
+                        size={1}
+                        value={amount}
+                        onChange={handleValueChange}
+                      />
+                      &nbsp; hiện có: &nbsp;
+                      {size && color
+                        ? getQuantity(product.items, color, size)
+                        : product.totalQuantity}
+                    </td>
+                  </tr>
+                </tbody>
               </table>
               <FormHelperText error>{err}</FormHelperText>
               <div

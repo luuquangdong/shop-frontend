@@ -50,7 +50,8 @@ function ImagesUpload(props) {
 }
 
 ImagesUpload.propTypes = {
-  imageFilesChange: PropTypes.func.isRequired,
+  handleImageFileChange: PropTypes.func.isRequired,
+  imageFiles: PropTypes.array,
 };
 
 export default ImagesUpload;

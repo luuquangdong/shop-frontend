@@ -6,7 +6,7 @@ import {
   Paper,
 } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-import instanceAxios from "apis/base";
+import { fetchProducts } from "apis/productAPI";
 import ProductCard from "components/ProductCard";
 import React, { useEffect, useReducer } from "react";
 
@@ -79,10 +79,8 @@ export default function ProductPage() {
   const { data, pageData, loading, totalPage, page, error } = state;
 
   useEffect(() => {
-    // console.log(instanceAxios);
     dispatch({ type: "fetchData" });
-    instanceAxios
-      .get("/products")
+    fetchProducts()
       .then((res) => {
         dispatch({
           type: "success",

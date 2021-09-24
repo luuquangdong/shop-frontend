@@ -1,5 +1,5 @@
 const zeroPrefix = (number) => `0${number}`.slice(-2);
-const dateReg = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+/;
+const dateReg = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d.*/;
 
 function date2DateTimeLocalString(date) {
   if (typeof date === "string" && dateReg.test(date)) {

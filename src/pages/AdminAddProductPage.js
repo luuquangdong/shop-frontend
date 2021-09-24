@@ -8,8 +8,6 @@ import {
   Paper,
   TextField,
 } from "@material-ui/core";
-import { useAuthAxios } from "apis/base";
-import axios from "axios";
 import ImagesUpload from "containers/ImagesUpload";
 import { FieldArray, Formik } from "formik";
 import { useSnackbar } from "notistack";
@@ -17,6 +15,8 @@ import React, { useState } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import { splitSizeAndQuantity } from "utils/productHelper";
 import * as yup from "yup";
+import uploadImage from "apis/uploadImage";
+import { useAuthAxios } from "apis/base";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -65,26 +65,17 @@ const productSchema = yup.object().shape({
   detail: yup.string(),
 });
 
-const CLOUDINARY_URL = "	https://api.cloudinary.com/v1_1/dongcloud/image/upload";
-
-/* ----- HERE ----- */
 export default function AdminAddProductPage() {
   const classes = useStyles();
   const [imageFiles, setImageFiles] = useState([]);
   const [errImg, setErrImg] = useState("");
 
-  const authAxios = useAuthAxios();
   const { enqueueSnackbar } = useSnackbar();
 
+  const authAxios = useAuthAxios();
+
   const uploadImages = async (imageFiles) => {
-    const res = await Promise.all(
-      imageFiles.map((file) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "et1gbgox");
-        return axios.post(CLOUDINARY_URL, formData);
-      })
-    );
+    const res = await Promise.all(imageFiles.map((file) => uploadImage(file)));
     // console.log(res);
     return res.map((row) => row.data.url);
   };
@@ -110,14 +101,19 @@ export default function AdminAddProductPage() {
     values.images = imageUrls;
     // tính cả total nữa
     console.log(values);
-    const newProduct = await authAxios.post("/products/create", values);
-    console.log(newProduct);
-    enqueueSnackbar("Thêm sản phẩm thành công", { variant: "success" });
+    try {
+      const newProduct = await authAxios.post("/products/create", values);
+      // const newProduct = await useCreateProduct(values);
 
-    // console.log(submitProps);
-    submitProps.resetForm();
-    setImageFiles([]);
-    console.log("done");
+      console.log(newProduct);
+      enqueueSnackbar("Thêm sản phẩm thành công", { variant: "success" });
+      // console.log(submitProps);
+      submitProps.resetForm();
+      setImageFiles([]);
+      console.log("done");
+    } catch (e) {
+      console.log({ e });
+    }
   };
 
   return (
