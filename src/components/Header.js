@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import Navbar from "./Navbar";
+import Navbar from "./NavBar";
 import { Link } from "react-router-dom";
 import { Logo5Icon } from "assets/images";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
